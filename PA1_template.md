@@ -8,6 +8,9 @@ output:
 
 ## Loading and preprocessing the data
 
+### 1. Load the data
+
+
 ```r
 activity <- read.csv("activity.csv")
 head(activity)
@@ -23,7 +26,11 @@ head(activity)
 ## 6    NA 2012-10-01       25
 ```
 
+
 ## What is mean total number of steps taken per day?
+
+### 1. Calculate the total number of steps taken per day
+
 
 ```r
 library("dplyr")
@@ -55,6 +62,7 @@ act0 <- activity %>% group_by(date) %>% summarise(total.steps = sum(steps,na.rm=
 ```
 
 
+### 3.  Calculate and report the mean and median 
 
 ```r
 mean(act0$total.steps,na.rm=TRUE)
@@ -73,8 +81,10 @@ median(act0$total.steps,na.rm=TRUE)
 ## [1] 10395
 ```
 
+### 2.  Histogram
+
 ```r
-barplot(act0$total.steps)
+barplot(act0$total.steps, xlab = "Days",ylab="Total Steps")
 ```
 
 ![](PA1_template_files/figure-html/barplot-1.png)<!-- -->
@@ -82,11 +92,21 @@ barplot(act0$total.steps)
 
 ## What is the average daily activity pattern?
 
+### 1. Make a time series plot
 
 ```r
 act1 <- activity %>% group_by(interval) %>% summarise(mean.steps = mean(steps,na.rm=TRUE))
 ```
 
+
+```r
+plot(x=act1$interval,y=act1$mean.steps,type="l",xlab = "Intervals",ylab="Steps mean")
+points(835,206.170,pch=20,col="red")
+```
+
+![](PA1_template_files/figure-html/plot-1.png)<!-- -->
+
+### 2. Which 5-minute interval contains the maximum number of steps?
 
 ```r
 max(act1$mean.steps)
@@ -99,16 +119,9 @@ max(act1$mean.steps)
 Max = 206.170  =>  Interval = 835
 
 
-
-```r
-plot(x=act1$interval,y=act1$mean.steps,type="l",xlab = "Intervals",ylab="Steps mean")
-points(835,206.170,pch=20,col="red")
-```
-
-![](PA1_template_files/figure-html/plot-1.png)<!-- -->
-
-
 ## Imputing missing values
+
+### 1. Calculate and report the total number of missing values
 
 ```r
 head(colSums(is.na(activity)))
@@ -121,8 +134,8 @@ head(colSums(is.na(activity)))
 
 There is only missing values in steps column.
 
-Fill missing values with mean values from act1 (previous section).
 
+### 2/3.  Create a new dataset using mean calculated previously
 
 
 ```r
@@ -136,7 +149,7 @@ for (i in 1:17568) {
 }
 ```
 
-
+### 4. Make a histogram 
 
 ```r
 act3 <- act2 %>% group_by(date) %>% summarise(total.steps = sum(steps,na.rm=TRUE))
@@ -162,16 +175,16 @@ median(act3$total.steps,na.rm=TRUE)
 
 
 ```r
-barplot(act3$total.steps)
+barplot(act3$total.steps , xlab = "Days",ylab="Total Steps")
 ```
 
 ![](PA1_template_files/figure-html/barplot2-1.png)<!-- -->
 
-
+The mean and the median has increased.
 
 ## Are there differences in activity patterns between weekdays and weekends?
 
-###1. Create a new factor variable 
+### 1. Create a new factor variable 
 
 
 ```r
@@ -196,7 +209,7 @@ act2$w.days <- ifelse(act2$day %in% 2:6,"weekday","weekend")
 act2$w.days <- as.factor(act2$w.days)
 ```
 
-2.Make a panel plot  
+### 2.Make a panel plot  
 
 
 ```r

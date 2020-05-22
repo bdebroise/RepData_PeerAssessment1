@@ -23,7 +23,7 @@ mean(act0$total.steps,na.rm=TRUE)
 median(act0$total.steps,na.rm=TRUE)
 
 
-barplot(act0$total.steps)
+barplot(act0$total.steps, xlab = "Intervals",ylab="Total Steps")
 
 
 
